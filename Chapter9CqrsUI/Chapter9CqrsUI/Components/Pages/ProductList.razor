@@ -1,0 +1,24 @@
+﻿@page "/products"
+@using Chapter9CQRS_API.Models
+@using Chapter9CqrsUI.HttpServices
+
+@inject IProductService productService
+
+<h1>Product List</h1>
+
+@if (products is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    foreach (var product in products)
+    {
+        <p>@product.Name priced at @product.Price</p>
+    }
+}
+@code {
+    private List<Product>? products;
+    protected override async Task OnInitializedAsync() 
+        => products = await productService.GetProductList();
+}

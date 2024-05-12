@@ -1,0 +1,43 @@
+﻿@page "/"
+@using Chapter9CQRS_API.Models
+@using Chapter9CqrsUI.HttpServices
+@inject IProductService ProductService
+@rendermode InteractiveServer
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+@if (Product is not null)
+{
+    <div>
+        <p>
+            @Product.Id
+        </p>
+        <p>
+            @Product.Name
+        </p>
+        <p>
+            @Product.Price
+        </p>
+    </div>
+}
+
+@code {
+    private Product Product = new();
+    protected override async Task OnInitializedAsync()
+    {
+        await ProductService.Post(new Product()
+            {
+                Id = 1,
+                Name = "My product name",
+                Price = 9.99M
+            });
+
+        Product = await ProductService.Get(1);
+        if (Product is not null)
+        {
+
+        }
+    }
+}
