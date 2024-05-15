@@ -14,11 +14,17 @@ else
 {
     foreach (var product in products)
     {
-        <p>@product.Name priced at @product.Price</p>
+        <div style="border: 1px solid black; padding: 10px; margin: 10px; width:300px">
+            <p>@product.Id</p>
+            <p>@product.Name</p>
+            <p>@product.Price</p>
+        </div>
     }
 }
 @code {
     private List<Product>? products;
     protected override async Task OnInitializedAsync() 
-        => products = await productService.GetProductList();
+        {
+            products = await productService.GetProductList();
+        }
 }
