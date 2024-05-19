@@ -52,5 +52,12 @@ public class ProductsProjection
         ExtractEvents(EventStore);
         return readModel;
     }
+
+    internal Product GetProductById(int id)
+    {
+        ExtractEvents(EventStore);
+        var product = readModel[id];
+        return product;
+    }
 }
 

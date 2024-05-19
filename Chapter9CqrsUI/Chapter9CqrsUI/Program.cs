@@ -118,9 +118,18 @@ public static class ConfigurationsController
     [ExcludeFromCodeCoverage]
     private static RouteGroupBuilder MapApi(this RouteGroupBuilder group)
     {
-        _ = group.MapGet($"/GetProduct/{{id}}", GetProduct);
-        _ = group.MapPost($"/PostProduct", PostProduct);
-        _ = group.MapGet($"/GetProductList", GetProductList);
+        _ = group.MapGet($"/GetProduct/{{id}}", GetProduct)
+                .WithName("GetProduct")
+                .WithOpenApi();
+        _ = group.MapPost($"/PostProduct", PostProduct)
+                .WithName("PostProduct")
+                .WithOpenApi();
+        _ = group.MapGet($"/GetProductList", GetProductList)
+                .WithName("GetProductList")
+                .WithOpenApi();
+        _ = group.MapPost($"/UpdateProductPrice", UpdateProductPrice)
+                .WithName("UpdateProductPrice")
+                .WithOpenApi();
         return group;
     }
 
@@ -135,8 +144,6 @@ public static class ConfigurationsController
 
     private static async Task<IResult> PostProduct(Product product, [FromServices] IMediator mediator)
     {
-        //app.MapPost("/PostProduct", async ([FromBody] Product product, [FromServices] IMediator mediator) =>
-        //{
         CreateProductCommand command = new CreateProductCommand()
         {
             Name = product.Name,
@@ -144,21 +151,25 @@ public static class ConfigurationsController
         };
         var productId = await mediator.Send(command);
         return Results.Ok(productId);
-        //})
-        //.WithName("PostProduct")
-        //.WithOpenApi();
     }
 
 
-    private static async Task<IResult> GetProductList(ProductsProjection projection)
+    private static async Task<IResult> GetProductList(ProductsProjection projection, [FromServices] IMediator mediator)
     {
-        //app.MapGet("/GetProductList", async (ProductsProjection projection) =>
-        //{
-            await Task.Yield();
-            var products = projection.GetAll();
-            return Results.Ok(products?.Values.ToList());
-        //})
-        //.WithName("GetProductList")
-        //.WithOpenApi();
+        await Task.Yield();
+        var products = projection.GetAll();
+        var ppp = await mediator.Send(new GetAllProductsQuery());
+        return Results.Ok(products?.Values.ToList());
+    }
+
+    private static async Task<IResult> UpdateProductPrice([FromBody] UpdateProductPriceCommand command, [FromServices] IMediator mediator)
+    {
+        var updatePrice = new UpdateProductPriceCommand()
+        {
+            Id = command.Id,
+            Price = command.Price,
+        };
+        var productPrice = await mediator.Send(command);
+        return Results.Ok(productPrice);
     }
 }

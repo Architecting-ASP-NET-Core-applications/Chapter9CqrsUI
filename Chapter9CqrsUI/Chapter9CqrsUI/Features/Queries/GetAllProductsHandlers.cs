@@ -1,25 +1,27 @@
-﻿using Chapter9CQRS_API.Models;
+﻿using Chapter9CQRS_API.Events.EventStore;
+using Chapter9CQRS_API.Models;
+using Chapter9CQRS_API.Projections;
 using MediatR;
 
 namespace Chapter9CQRS_API.Features.Queries;
 
 public class GetAllProductsHandlers : IRequestHandler<GetAllProductsQuery, List<Product>>
 {
+    public ProductsProjection Projection { get; }
+
+    public GetAllProductsHandlers(ProductsProjection projection)
+    {
+        Projection = projection;
+    }
+
+
+
     public async Task<List<Product>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
     {
         await Task.Yield();
         var products = new List<Product>();
-
-        //for simplicity we will return 10 random products
-        for (int i = 1; i <= 10; i++)
-        {
-            products.Add(new Product
-            {
-                Id = i,
-                Name = $"Product {i}",
-                Price = 10.00m * i 
-            });
-        }
+        var pro = Projection.GetAll();
+        products = pro.Values.ToList();
         return products;
     }
 }

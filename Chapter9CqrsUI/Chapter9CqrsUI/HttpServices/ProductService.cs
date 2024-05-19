@@ -23,9 +23,13 @@ public class ProductService : AbstractService, IProductService
 
     public async Task<HttpResponseMessage> Post(Product product)
     {
-        var content = JsonSerializer.Serialize(product);
-        var requestContent = new StringContent(content, Encoding.UTF8, MediaTypeNames.Application.Json);
         var requestAddr = $"https://localhost:7223/PostProduct";
+        return await PerformPostAsync(requestAddr, product);
+    }
+
+    public async Task<HttpResponseMessage> Update(Product product)
+    {
+        var requestAddr = $"https://localhost:7223/UpdateProductPrice";
         return await PerformPostAsync(requestAddr, product);
     }
 }
