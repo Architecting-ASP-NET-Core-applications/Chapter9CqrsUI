@@ -119,22 +119,15 @@ public static class ConfigurationsController
     private static RouteGroupBuilder MapApi(this RouteGroupBuilder group)
     {
         _ = group.MapGet($"/GetProduct/{{id}}", GetProduct)
-                .WithName("GetProduct")
-                .WithOpenApi();
+            .WithName("GetProduct");
         _ = group.MapPost($"/PostProduct", PostProduct)
-                .WithName("PostProduct")
-                .WithOpenApi();
+                .WithName("PostProduct");
         _ = group.MapGet($"/GetProductList", GetProductList)
-                .WithName("GetProductList")
-                .WithOpenApi();
+                .WithName("GetProductList");
         _ = group.MapPost($"/UpdateProductPrice", UpdateProductPrice)
-                .WithName("UpdateProductPrice")
-                .WithOpenApi();
+                .WithName("UpdateProductPrice");
         return group;
     }
-
-
-
 
     private static async Task<IResult> GetProduct(int id, [FromServices] IMediator mediator)
     {
