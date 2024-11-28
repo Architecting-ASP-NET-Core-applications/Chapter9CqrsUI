@@ -24,10 +24,7 @@ builder.Services.AddHttpClient("MyApiClient", client =>
 
 builder.Services.AddMediatR(cfg => cfg
     .RegisterServicesFromAssembly(
-        typeof(CreateProductHandler).Assembly));
-builder.Services.AddMediatR(cfg => cfg
-    .RegisterServicesFromAssembly(
-        typeof(GetProductByIdHandler).Assembly));
+        typeof(Program).Assembly));
 
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddCors(options =>
